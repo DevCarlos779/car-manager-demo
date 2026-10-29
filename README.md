@@ -1,34 +1,57 @@
 # CarManager
 
-Aplicação web para gerenciar veículos e acompanhar as obrigações de cada um, como **IPVA** e **licenciamento**. O sistema avisa quais carros estão em dia, perto do vencimento ou atrasados, para evitar multas e juros.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)
 
-**Demonstração:** [LINK_DO_DEPLOY](LINK_DO_DEPLOY)
+Sistema web para controlar os veículos de uma empresa e acompanhar os vencimentos de **IPVA** e **licenciamento**. Ele mostra, de relance, quais carros estão em dia, quais estão perto do vencimento e quais já atrasaram, para evitar multas e juros.
 
-> Os dados da demonstração são **fictícios**. Qualquer pessoa com o login abaixo pode alterar ou apagar os registros, e eles são recriados de tempos em tempos.
+## Demonstração
+
+**[car-manager-demo-ashen.vercel.app](https://car-manager-demo-ashen.vercel.app)**
 
 | Acesso de demonstração | |
 |---|---|
-| E-mail | `EMAIL_DEMO` |
-| Senha | `SENHA_DEMO` |
+| E-mail | `demo@carmanager.com` |
+| Senha | `123456` |
+
+> Os dados da demonstração são **fictícios**. Qualquer visitante com esse login pode criar, editar e apagar registros, então os veículos podem mudar de uma visita para outra.
+
+## Sobre o projeto
+
+O CarManager nasceu de uma necessidade real: controlar os pagamentos de IPVA e licenciamento da frota de uma empresa familiar, sem depender de planilha nem de memória. Esta é a versão de demonstração, com banco de dados e login próprios e dados de exemplo.
+
+Foi também o meu primeiro projeto em **Next.js**. Usei ele para praticar o App Router, Server Actions e autenticação no servidor.
 
 ## Funcionalidades
 
 - Cadastro, edição e exclusão de veículos
-- Controle de IPVA e licenciamento, com a opção de o veículo não pagar IPVA
-- Status de cada veículo: **em dia**, **próximo do vencimento** (menos de 1 mês) e **atrasado**
-- Botão "Marcar como pago", que registra o pagamento e renova o vencimento para o ano seguinte
-- Dashboard com resumo e filtros por situação
-- Busca por marca, modelo ou placa, e ordenação por nome ou vencimento
-- Login com sessão por cookie, rotas e ações protegidas no servidor
-- Layout responsivo: no celular, a tabela vira cards e a sidebar vira menu
+- Controle de IPVA e licenciamento, com suporte a veículos isentos de IPVA
+- Status de cada veículo: **em dia**, **próximo do vencimento** e **atrasado**
+- Botão **Marcar como pago**, que registra o pagamento e renova o vencimento para o ano seguinte
+- Dashboard com o resumo da frota e filtros por situação
+- Busca por marca, modelo ou placa e ordenação por nome ou vencimento
+- Login com sessão por cookie e rotas protegidas
+- Layout responsivo: no celular a tabela vira cards e a sidebar vira menu
+
+## Como o status é definido
+
+| Status | Regra |
+|---|---|
+| Atrasado | O vencimento de alguma obrigação já passou |
+| Próximo | Falta menos de 1 mês para o vencimento |
+| Em dia | Nenhuma das duas situações acima |
+
+Um veículo com mais de uma obrigação assume a situação mais urgente.
 
 ## Tecnologias
 
-- [Next.js](https://nextjs.org/) (App Router, Server Actions)
+- [Next.js](https://nextjs.org/) com App Router e Server Actions
 - React e TypeScript
 - Tailwind CSS
-- Firebase: Authentication e Firestore, acessados no servidor com o Admin SDK
-- Lucide React (ícones)
+- Firebase Authentication e Firestore, acessados no servidor com o Admin SDK
+- Lucide React para os ícones
 - Jest e React Testing Library
 
 ## Como rodar localmente
@@ -36,8 +59,8 @@ Aplicação web para gerenciar veículos e acompanhar as obrigações de cada um
 ### 1. Clone e instale
 
 ```bash
-git clone https://github.com/DevCarlos779/NOME-DO-REPO.git
-cd NOME-DO-REPO
+git clone https://github.com/DevCarlos779/car-manager-demo.git
+cd car-manager-demo
 npm install
 ```
 
@@ -50,8 +73,6 @@ npm install
 5. Em **Contas de serviço**, gere uma chave privada e copie `project_id`, `client_email` e `private_key`.
 
 ### 3. Configure as variáveis de ambiente
-
-Copie o arquivo de exemplo e preencha:
 
 ```bash
 cp .env.example .env.local
@@ -66,7 +87,7 @@ No Windows (PowerShell): `Copy-Item .env.example .env.local`
 | `FIREBASE_CLIENT_EMAIL` | `client_email` da chave de serviço |
 | `FIREBASE_PRIVATE_KEY` | `private_key` da chave de serviço, entre aspas e com os `\n` como texto |
 
-> **Nunca** envie o `.env.local` ou o `.json` da chave de serviço para o GitHub.
+> Nunca envie o `.env.local` ou o `.json` da chave de serviço para o GitHub.
 
 ### 4. Inicie o projeto
 
@@ -102,10 +123,20 @@ src/
 ## Segurança
 
 - A sessão fica em um cookie `httpOnly`, criado no servidor com o Firebase Admin SDK.
-- Cada Server Action e cada leitura de dados confere a sessão antes de acessar o banco.
+- Cada Server Action e cada leitura de dados conferem a sessão antes de acessar o banco.
 - As regras do Firestore ficam fechadas: o banco só é acessado pelo servidor.
-- Credenciais ficam em variáveis de ambiente e fora do repositório.
+- As credenciais ficam em variáveis de ambiente, fora do repositório.
+
+## O que aprendi
+
+- Organizar um projeto em Next.js com Route Groups e layouts diferentes (com e sem sidebar)
+- Server Actions para escrita de dados e leitura em Server Components
+- Autenticação com cookie de sessão e verificação no servidor
+- Regras de negócio com datas (vencimentos, renovação anual e status calculados)
+- Layout responsivo com Tailwind, incluindo tabela que vira cards no celular
 
 ## Autor
 
-Feito por **Carlos Emanuel**, [@DevCarlos779](https://github.com/DevCarlos779).
+Feito por **Carlos Emanuel**.
+
+[GitHub](https://github.com/DevCarlos779) · [LinkedIn](https://www.linkedin.com/in/carlos-emanuel-developer/)
